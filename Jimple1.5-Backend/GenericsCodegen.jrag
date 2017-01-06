@@ -28,7 +28,7 @@ aspect GenericsCodegen {
     return erasedConstructor().createAnonymousJavaTypeDecl();
   }
 
-  syn FieldDeclaration FieldDeclaration.erasedField() = this;
+  syn FieldDeclarator FieldDeclarator.erasedField() = this;
   eq FieldDeclarationSubstituted.erasedField() = getOriginal().erasedField();
 
   syn MethodDecl MethodDecl.erasedMethod() = this;
@@ -38,8 +38,8 @@ aspect GenericsCodegen {
   refine Expressions public soot.Value VarAccess.eval(Body b) {
     Variable v = decl();
     soot.Value result;
-    if(v instanceof FieldDeclaration) {
-      FieldDeclaration f = ((FieldDeclaration)v).erasedField();
+    if(v instanceof FieldDeclarator) {
+      FieldDeclarator f = ((FieldDeclarator)v).erasedField();
       if(f.hostType().isArrayDecl() && f.name().equals("length")) {
         return b.newLengthExpr(asImmediate(b, createLoadQualifier(b)), this);
       }
@@ -73,7 +73,7 @@ aspect GenericsCodegen {
       return refined(b);
   }
   refine Expressions private SootFieldRef VarAccess.sootRef() {
-    FieldDeclaration decl = ((FieldDeclaration)decl()).erasedField();
+    FieldDeclarator decl = ((FieldDeclarator)decl()).erasedField();
     SootFieldRef ref = Scene.v().makeFieldRef(
       fieldQualifierType().getSootClassDecl(),
       decl.name(),
@@ -85,8 +85,8 @@ aspect GenericsCodegen {
 
   refine Expressions public soot.Value VarAccess.emitStore(Body b, soot.Value lvalue, soot.Value rvalue, ASTNode location) {
     Variable v = decl();
-    if(v instanceof FieldDeclaration) {
-      FieldDeclaration f = ((FieldDeclaration)v).erasedField();
+    if(v instanceof FieldDeclarator) {
+      FieldDeclarator f = ((FieldDeclarator)v).erasedField();
       if(requiresAccessor()) {
         if(f.isStatic()) {
           ArrayList list = new ArrayList();
@@ -107,8 +107,8 @@ aspect GenericsCodegen {
 
   refine Expressions public soot.Local VarAccess.createLoadQualifier(Body b) {
     Variable v = decl();
-    if(v instanceof FieldDeclaration) {
-      FieldDeclaration f = ((FieldDeclaration)v).erasedField();
+    if(v instanceof FieldDeclarator) {
+      FieldDeclarator f = ((FieldDeclarator)v).erasedField();
       if(hasPrevExpr()) {
         // load explicit qualifier
         Local qualifier = asLocal(b, prevExpr().eval(b));
@@ -439,8 +439,8 @@ aspect GenericsCodegen {
     return c;
   }
 
-  refine AnnotationsCodegen eq FieldDeclaration.attributes() {
-    Collection c = AnnotationsCodegen.FieldDeclaration.attributes();
+  refine AnnotationsCodegen eq FieldDeclarator.attributes() {
+    Collection c = AnnotationsCodegen.FieldDeclarator.attributes();
     if(needsSignatureAttribute())
       c.add(new SignatureAttribute(hostType().constantPool(), type().fieldTypeSignature()));
     return c;
@@ -496,7 +496,7 @@ aspect GenericsCodegen {
   }
   eq GenericConstructorDecl.needsSignatureAttribute() = true;
 
-  eq FieldDeclaration.needsSignatureAttribute() = type().needsSignatureAttribute();
+  eq FieldDeclarator.needsSignatureAttribute() = type().needsSignatureAttribute();
 
   // compute the signature string used for the signature attribute
   syn lazy String TypeDecl.classSignature() = "";
