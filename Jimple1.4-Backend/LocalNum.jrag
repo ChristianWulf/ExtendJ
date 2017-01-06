@@ -8,7 +8,7 @@
  */
 
 aspect LocalNum {
-  inh lazy int VariableDeclarator.localNum();
+  inh lazy int VariableDeclaration.localNum();
   inh lazy int Stmt.localNum();
   inh lazy int ParameterDeclaration.localNum();
 

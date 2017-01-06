@@ -124,7 +124,7 @@ aspect EmitJimple {
     if(isPrivate()) result |= soot.Modifier.PRIVATE;
     return result;
   }
-  syn int FieldDeclarator.sootTypeModifiers() {
+  syn int FieldDeclaration.sootTypeModifiers() {
     int result = 0;
     if(isPublic()) result |= soot.Modifier.PUBLIC;
     if(isProtected()) result |= soot.Modifier.PROTECTED;
@@ -326,7 +326,7 @@ aspect EmitJimple {
   }
   
 
-  public void FieldDeclarator.jimplify1phase2() {
+  public void FieldDeclaration.jimplify1phase2() {
     String name = name();
     soot.Type type = type().getSootType();
     int modifiers = sootTypeModifiers();
@@ -351,8 +351,8 @@ aspect EmitJimple {
     }
     addAttributes();
   }
-  public SootField FieldDeclarator.sootField;
-  syn lazy SootFieldRef FieldDeclarator.sootRef() =
+  public SootField FieldDeclaration.sootField;
+  syn lazy SootFieldRef FieldDeclaration.sootRef() =
     Scene.v().makeFieldRef(hostType().getSootClassDecl(), name(), type().getSootType(), isStatic());
    // hostType().getSootClassDecl().getField(name(), type().getSootType()).makeRef();
   
@@ -374,7 +374,7 @@ aspect EmitJimple {
   }
 
 
-  public void VariableDeclarator.jimplify2(Body b) {
+  public void VariableDeclaration.jimplify2(Body b) {
     b.setLine(this);
     local = b.newLocal(name(), type().getSootType());
     if(hasInit()) {
@@ -392,7 +392,7 @@ aspect EmitJimple {
       );
     }
   }
-  public Local VariableDeclarator.local;
+  public Local VariableDeclaration.local;
 
   public void ParameterDeclaration.jimplify2(Body b) {
     b.setLine(this);
@@ -887,8 +887,8 @@ aspect EmitJimple {
   syn lazy boolean TypeDecl.needsClinit() {
     for(int i = 0; i < getNumBodyDecl(); i++) {
       BodyDecl b = getBodyDecl(i);
-      if(b instanceof FieldDeclarator) {
-        FieldDeclarator f = (FieldDeclarator)b;
+      if(b instanceof FieldDeclaration) {
+        FieldDeclaration f = (FieldDeclaration)b;
         if(f.isStatic() && f.hasInit() && f.generate()) {
           return true;
         }
@@ -907,8 +907,8 @@ aspect EmitJimple {
       Body b = new Body(this, body, this);
       for(int i = 0; i < getNumBodyDecl(); i++) {
         BodyDecl bodyDecl = getBodyDecl(i);
-        if(bodyDecl instanceof FieldDeclarator && bodyDecl.generate()) {
-          FieldDeclarator f = (FieldDeclarator)bodyDecl;
+        if(bodyDecl instanceof FieldDeclaration && bodyDecl.generate()) {
+          FieldDeclaration f = (FieldDeclaration)bodyDecl;
           if(f.isStatic() && f.hasInit()) {
             Local l = asLocal(b, 
               f.getInit().type().emitCastTo(b, f.getInit(), f.type()), // AssignConversion
@@ -1053,8 +1053,8 @@ aspect EmitJimple {
       TypeDecl typeDecl = hostType();
       for(int i = 0; i < typeDecl.getNumBodyDecl(); i++) {
         BodyDecl bodyDecl = typeDecl.getBodyDecl(i);
-        if(bodyDecl instanceof FieldDeclarator && bodyDecl.generate()) {
-          FieldDeclarator f = (FieldDeclarator)bodyDecl;
+        if(bodyDecl instanceof FieldDeclaration && bodyDecl.generate()) {
+          FieldDeclaration f = (FieldDeclaration)bodyDecl;
           if(!f.isStatic() && f.hasInit()) {
             soot.Local base = b.emitThis(hostType());
             Local l = asLocal(b,

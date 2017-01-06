@@ -1,3 +1,3 @@
 
-ant java5-frontend
-ant -f .\Jimple-Main\build.xml jimple-frontend-gen
+call ant java5-frontend
+call ant -f .\Jimple-Main\build.xml jimple-frontend-gen

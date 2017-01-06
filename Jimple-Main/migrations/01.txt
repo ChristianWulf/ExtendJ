@@ -1,0 +1,26 @@
+PS I:\Repositories\ExtendJ-chw> ant -f .\Jimple-Main\build.xml jimple-frontend-gen
+Buildfile: I:\Repositories\ExtendJ-chw\Jimple-Main\build.xml
+
+jimple-frontend-gen:
+  [jastadd] generating node types and weaving aspects
+  [jastadd] Problems during JRAG parsing:
+  [jastadd] Error at I:\Repositories\ExtendJ-chw\Jimple1.4-Backend\EmitJimple.jrag:329: can not add member to unknown class FieldDeclaration
+  [jastadd] Error at I:\Repositories\ExtendJ-chw\Jimple1.4-Backend\EmitJimple.jrag:354: can not add member to unknown class FieldDeclaration
+  [jastadd] Error at I:\Repositories\ExtendJ-chw\Jimple1.4-Backend\EmitJimple.jrag:377: can not add member to unknown class VariableDeclaration
+  [jastadd] Error at I:\Repositories\ExtendJ-chw\Jimple1.4-Backend\EmitJimple.jrag:395: can not add member to unknown class VariableDeclaration
+  [jastadd] Error at I:\Repositories\ExtendJ-chw\Jimple1.5-Backend\AnnotationsCodegen.jrag:32: can not add member to unknown class FieldDeclaration
+
+BUILD FAILED
+I:\Repositories\ExtendJ-chw\Jimple-Main\build.xml:32: Failed to generate AST!
+
+Total time: 0 seconds
+
+
+=====================================
+
+OLD
+	in VariableDeclaration.jrag:
+	// FieldDecl with multiple VariableDecl -> FieldDeclaration+
+NEW
+	FieldDecl with multiple FieldDeclarator
+	

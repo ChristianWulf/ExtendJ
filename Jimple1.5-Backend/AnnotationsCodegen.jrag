@@ -29,7 +29,7 @@ aspect AnnotationsCodegen {
     }
   }
   
-  public void FieldDeclarator.addAttributes() {
+  public void FieldDeclaration.addAttributes() {
     super.addAttributes();
     ArrayList c = new ArrayList();
     getModifiers().addRuntimeVisibleAnnotationsAttribute(c);
