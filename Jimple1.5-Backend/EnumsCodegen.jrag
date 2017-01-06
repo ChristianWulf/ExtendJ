@@ -11,7 +11,18 @@ aspect EnumsCodegen {
     // add flags to enums
   public static final int Modifiers.ACC_ENUM = 0x4000;
   eq EnumDecl.sootTypeModifiers() = super.sootTypeModifiers() | Modifiers.ACC_ENUM;
-  eq EnumConstant.sootTypeModifiers() = super.sootTypeModifiers() | Modifiers.ACC_ENUM;
+  
+  //eq EnumConstant.sootTypeModifiers() = super.sootTypeModifiers() | Modifiers.ACC_ENUM;
+  syn int EnumConstant.sootTypeModifiers() {
+    int result = 0;
+    if(isPublic()) result |= soot.Modifier.PUBLIC;
+    if(isProtected()) result |= soot.Modifier.PROTECTED;
+    if(isPrivate()) result |= soot.Modifier.PRIVATE;
+    if(isFinal()) result |= soot.Modifier.FINAL;
+    if(isStatic()) result |= soot.Modifier.STATIC;
+	result |= Modifiers.ACC_ENUM;
+    return result;
+  }
 
   // transform enum switch statements into integer indexed switch statements
   public void SwitchStmt.transformation() {

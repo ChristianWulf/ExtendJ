@@ -14,8 +14,8 @@ aspect EnhancedForToBytecode {
   syn lazy soot.jimple.Stmt EnhancedForStmt.end_label() = newLabel();
 
   syn lazy int EnhancedForStmt.extraLocalIndex() = localNum();
-  eq EnhancedForStmt.getVariableDeclaration().localNum() = localNum() + (getExpr().type().isArrayDecl() ? 2 : 1);
-  eq EnhancedForStmt.getStmt().localNum() = getVariableDeclaration().localNum() + getVariableDeclaration().type().size();
+  eq EnhancedForStmt.getVariableDecl().localNum() = localNum() + (getExpr().type().isArrayDecl() ? 2 : 1);
+  eq EnhancedForStmt.getStmt().localNum() = getVariableDecl().localNum() + getVariableDecl().type().size();
 
    // EnhancedForStmt can be both break and continue target
   eq EnhancedForStmt.break_label() = end_label();
@@ -25,8 +25,8 @@ aspect EnhancedForToBytecode {
     if(getExpr().type().isArrayDecl()) {
       soot.Local array = asLocal(b, getExpr().eval(b));
       soot.Local index = asLocal(b, soot.jimple.IntConstant.v(0));
-      soot.Local parameter = b.newLocal(getVariableDeclaration().name(), getVariableDeclaration().type().getSootType());
-      getVariableDeclaration().local = parameter;
+      soot.Local parameter = b.newLocal(getVariableDecl().name(), getVariableDecl().type().getSootType());
+      getVariableDecl().local = parameter;
       b.addLabel(cond_label());
       b.add(
         b.newIfStmt(
@@ -51,7 +51,7 @@ aspect EnhancedForToBytecode {
                   this
                 )
               ),
-              getVariableDeclaration().type(),
+              getVariableDecl().type(),
               this
             )
           ),
@@ -83,8 +83,8 @@ aspect EnhancedForToBytecode {
           this
         )
       );
-      soot.Local parameter = b.newLocal(getVariableDeclaration().name(), getVariableDeclaration().type().getSootType());
-      getVariableDeclaration().local = parameter;
+      soot.Local parameter = b.newLocal(getVariableDecl().name(), getVariableDecl().type().getSootType());
+      getVariableDecl().local = parameter;
       b.addLabel(cond_label());
       b.add(
         b.newIfStmt(
@@ -114,7 +114,7 @@ aspect EnhancedForToBytecode {
               new ArrayList(),
               this
             ),
-            getVariableDeclaration().type(),
+            getVariableDecl().type(),
             this
           ),
           this
@@ -137,8 +137,8 @@ aspect EnhancedForToBytecode {
       gen.emitCompare(Bytecode.IFEQ, end_label());
       gen.emitLoadReference(extraLocalIndex());
       nextMethod().emitInvokeMethod(gen, lookupType("java.util", "Iterator"));
-      gen.emitCheckCast(getVariableDeclaration().type());
-      gen.emitStoreReference(getVariableDeclaration().localNum());
+      gen.emitCheckCast(getVariableDecl().type());
+      gen.emitStoreReference(getVariableDecl().localNum());
       getStmt().createBCode(gen);
       gen.addLabel(update_label());	
       gen.emitGoto(cond_label());
